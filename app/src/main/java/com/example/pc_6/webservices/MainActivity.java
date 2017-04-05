@@ -13,6 +13,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
 
     ProgressBar cargador;
@@ -43,11 +45,16 @@ public class MainActivity extends AppCompatActivity {
 
     public void onButton(View view){
         if(isOnline()){
-            Toast.makeText(this, "My tarea", Toast.LENGTH_SHORT).show();
+            MyTask task = new MyTask();
+            task.execute("http://186.116.10.48/zeusacad/img/usuarios.xml");
         }else{
-            Toast.makeText(this, "Sin conxión", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Sin conexión", Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    public void cargarDatos(String dato){
+        texto.append(dato + "\n");
     }
 
     public class MyTask extends AsyncTask<String, String, String>{
@@ -56,11 +63,18 @@ public class MainActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             cargador.setVisibility(View.VISIBLE);
+            cargarDatos("Iniciar Tarea");
         }
 
         @Override
         protected String doInBackground(String... params) {
-            return null;
+            String contend = "";
+            try {
+                contend = HttpManager.getData(params[0]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return contend;
         }
 
         @Override
@@ -72,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             cargador.setVisibility(View.GONE);
+            cargarDatos(s);
         }
     }
 }
