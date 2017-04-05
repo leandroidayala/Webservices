@@ -33,9 +33,13 @@ public class MainActivity extends AppCompatActivity {
 
     public Boolean isOnline(){
         //Método para validar la conexón a Internet
+
+        //Permite acceder al servicio para verificar la conexión a Internet
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        //Permite obtener la información de la conexión
         NetworkInfo network = connectivityManager.getActiveNetworkInfo();
 
+        //Validar el estado de la conexión
         if(network != null && network.isConnectedOrConnecting()){
             return true;
         }else{
@@ -44,8 +48,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onButton(View view){
+    //Evento botón de cargar información
+
         if(isOnline()){
             MyTask task = new MyTask();
+            //Ejecutar mi tarea y se pasa como parámetro la URL de los datos
             task.execute("http://186.116.10.48/zeusacad/img/usuarios.xml");
         }else{
             Toast.makeText(this, "Sin conexión", Toast.LENGTH_SHORT).show();
